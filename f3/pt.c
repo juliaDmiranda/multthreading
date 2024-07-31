@@ -37,7 +37,7 @@ void m_usleep(unsigned long pause)
 #ifdef MWIN
    Sleep(pause);
 #else
-   usleep(pause*1000l);
+   m_usleep(pause*1000l);
 #endif
 
    return;
@@ -78,20 +78,23 @@ int gerar_entrada()
 
 void *escrita()
 {
+    printf("Escrita criada");
 
     return(NULL);
 }
 
 void *leitura()
 {
+    printf("Leitura criada");
    return(NULL);
 }
 
 void *processamento()
 {
+    printf("processamento criado");
     return(NULL);
 }
-
+/*
 void finalizar()
 {
     int nao_acabou = 1;
@@ -108,6 +111,15 @@ void finalizar()
     }
     return;
 }
+*/
+
+void chama_threads(pthread_t *nome_pthread, void *(*funcao)(void *)) {
+    if (pthread_create(nome_pthread, NULL, funcao, NULL)) {
+        printf("\nERRO: criando thread.\n");
+        exit (1);
+    }
+}
+
 
 int main(void)
 {
@@ -127,24 +139,29 @@ int main(void)
     // inicializacao dos controladores dos buffers
 
     // geracao do arquivo de entrada
-    if (!gerar_entrada())
+    /*if (!gerar_entrada())
     {
         printf("\nVou sair");
         return(1);
-    }
+    }*/
 
     // chamada das pthreads
-
+    chama_threads(&entrada_thread, escrita);
+    chama_threads(&processamento_thread, processamento);
+    chama_threads(&saida_thread, leitura);
 
 
 
     // Aguarda finalizar
-    finalizar();
+    //finalizar();
 
     // matar as pthreads
-    pthread_kill(entrada_thread,0);
-    pthread_kill(processamento_thread,0);
-    pthread_kill(saida_thread,0);
+    // pthread_kill(&entrada_thread);
+    // pthread_kill(&processamento_thread);
+    // pthread_kill(&saida_thread);
+    pthread_join(entrada_thread, NULL);
+    pthread_join(processamento_thread, NULL);
+    pthread_join(saida_thread, NULL);
 
     // finaliza��o dos mutexes
 
