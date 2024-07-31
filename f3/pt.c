@@ -17,13 +17,14 @@ cc -o pt -lpthread pt.c
 
 #define TEMPO_SLEEP 10
 
-// Variaveis globais
+/// Variaveis globais
 
 // declaracao dos mutexes
 
 
-
 // controladores dos buffers
+int buffer_e_disponivel = 1;
+int buffer_s_disponivel = 1;
 
 // variavel de controle do encerramento
 int G_terminou;
@@ -78,14 +79,20 @@ int gerar_entrada()
 
 void *escrita()
 {
-    printf("Escrita criada");
+    // escrita no buffer de entrada
+    if(buffer_e_disponivel){
+        //escreve no buffer
+    }
 
     return(NULL);
 }
 
 void *leitura()
 {
-    printf("Leitura criada");
+    // escrita no arquivo de saída
+    if(buffer_s_disponivel){
+        //escreve no buffer
+    }
    return(NULL);
 }
 
@@ -156,9 +163,6 @@ int main(void)
     //finalizar();
 
     // matar as pthreads
-    // pthread_kill(&entrada_thread);
-    // pthread_kill(&processamento_thread);
-    // pthread_kill(&saida_thread);
     pthread_join(entrada_thread, NULL);
     pthread_join(processamento_thread, NULL);
     pthread_join(saida_thread, NULL);
