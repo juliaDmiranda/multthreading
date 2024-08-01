@@ -20,18 +20,19 @@ cc -o pt -lpthread pt.c
 /// Variaveis globais
 
 // declaracao dos mutexes
-
+pthread_mutex_t buffer_e_mutex;
+pthread_mutex_t buffer_s_mutex;
 
 // controladores dos buffers que indica se estão vazios
-int buffer_e_disponivel = 1;
-int buffer_s_disponivel = 1;
+int buffer_e_disponivel;
+int buffer_s_disponivel;
 
 // variavel de controle do encerramento
 int G_terminou;
 
 // buffers de processamento
-char G_be[6];
-char G_bs[6];
+char buffer_e[6];
+char buffer_s[6];
 
 void m_usleep(unsigned long pause)
 {
