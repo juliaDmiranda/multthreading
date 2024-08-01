@@ -22,7 +22,7 @@ cc -o pt -lpthread pt.c
 // declaracao dos mutexes
 
 
-// controladores dos buffers
+// controladores dos buffers que indica se estão vazios
 int buffer_e_disponivel = 1;
 int buffer_s_disponivel = 1;
 
