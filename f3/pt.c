@@ -96,12 +96,39 @@ void *leitura()
    return(NULL);
 }
 
-void *processamento()
-{
-    printf("processamento criado");
+void *processamento(){
+    // bloqueia buffer de entrada
+    pthread_mutex_lock(&mutex_buffer_e);
+
+    if(esta_vazio_buffer_e){
+        pthread_mutex_unlock(&mutex_buffer_e);
+    }
+    else{
+        char buffer_tmp[BUFFER_TAM];
+
+        limpa_buffer(buffer_tmp);
+
+        // lê do buffer de entrada um novo registro
+        strcpy(buffer_tmp, buffer_e);
+        
+        // limpa o buffer de entrada
+        limpa_buffer(buffer_e);
+        
+        pthread_mutex_unlock(&mutex_buffer_e);
+
+        pthread_mutex_lock(&mutex_buffer_s);
+        
+        inverte_string(buffer_tmp, buffer_s);
+
+        esta_vazio_buffer_s = 0;
+
+        pthread_mutex_unlock(&mutex_buffer_s);
+    
+    }
+    msleep();
+
     return(NULL);
 }
-/*
 void finalizar()
 {
     int nao_acabou = 1;
