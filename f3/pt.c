@@ -56,6 +56,20 @@ void fini_lock(pthread_mutex_t *lock) // finalize as variaveis de lock, apos o p
    return;
 }
 
+void limpa_buffer(char* buffer){
+    memset(buffer, '\0', BUFFER_TAM);
+}
+
+void inverte_string(const char* str_src, char* str_dest) {
+    int buffer_tam = BUFFER_TAM - 1;
+    for (int i = 0; i < buffer_tam; i++) {
+        str_dest[i] = str_src[buffer_tam - 1 - i];  // Copia os caracteres na ordem inversa
+    }
+
+    str_dest[buffer_tam] = '\0';  // Adiciona o caractere nulo ao final da string invertida
+}
+
+
 int gerar_entrada()
 {
     FILE *arq;
