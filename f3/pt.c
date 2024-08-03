@@ -181,10 +181,16 @@ int main(void)
     G_terminou = 3;
 
     // inicializacao dos mutexes de lock
+    init_lock(&mutex_buffer_e);
+    init_lock(&mutex_buffer_s);
 
     // limpeza dos buffers
+    limpa_buffer(buffer_e);
+    limpa_buffer(buffer_s);
 
     // inicializacao dos controladores dos buffers
+    int esta_vazio_buffer_e = 1;
+    int esta_vazio_buffer_s = 1;
 
     // geracao do arquivo de entrada
     /*if (!gerar_entrada())
@@ -201,7 +207,7 @@ int main(void)
 
 
     // Aguarda finalizar
-    //finalizar();
+    finalizar();
 
     // matar as pthreads
     pthread_join(entrada_thread, NULL);
@@ -209,6 +215,7 @@ int main(void)
     pthread_join(saida_thread, NULL);
 
     // finaliza��o dos mutexes
-
+    fini_lock(&mutex_buffer_e);
+    fini_lock(&mutex_buffer_s);
     return(0);
 }
