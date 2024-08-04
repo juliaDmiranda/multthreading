@@ -94,30 +94,36 @@ int gerar_entrada()
 
 void *escrita()
 {
-        FILE *arq;
-
-    pthread_mutex_lock(&mutex_buffer_s);
-
-    // escrita no buffer de entrada
-    if(!esta_vazio_buffer_s){
-        //escreve no buffer
-        if ((arq = fopen("s.txt","wt"))==NULL)
-        {
-            printf("\nERRO: criando o arquivo de entrada (e.txt)\n");
-            return(ERRO);
-        }
-
-        fprintf(arq,"%s\n",buffer_s);
-
-        limpa_buffer(buffer_s);
-
-        esta_vazio_buffer_s = 1;
+    FILE *arq;
+    //abrir o arquivo de saida 
+    if((arq=fopen("s.txt", "wt"))==NULL){
+        printf("\n Erro: criando o arquivo de saída (s.txt)\n");
+        pthread_exit(NULL);
     }
 
-    pthread_mutex_unlock(&mutex_buffer_s);
+    while(terminou > 0){
+        pthread_mutex_look(& buffer_s_mutex);
+         // escrita no arquivo de saída
+        if(!buffer_s_esta_vazio){
+            //escreve no buffer
+            fprintf(arq, "%s\n",buffer_s);
+            
+            // limpa buffer
+            limpa_buffer(buffer_s);
 
-    msleep();
-    return(NULL);
+            //marcar o buffer de saida como vazio 
+            buffer_s_esta_vazio = 1;
+
+            //decrementar o terminou apois processar uma entrada 
+            pthread_mutex_lock(&terminou_mutex);
+
+            terminou--;
+            
+            pthread_mutex_unlock(&terminou_mutex);
+        }
+    }
+   
+   return(NULL);
 }
 
 void *leitura()
