@@ -22,6 +22,7 @@ cc -o pt -lpthread pt.c
 // declaracao dos mutexes
 pthread_mutex_t buffer_e_mutex;
 pthread_mutex_t buffer_s_mutex;
+pthread_mutex_t G_p_fi;
 
 // controladores dos buffers que indica se estão vazios
 int buffer_e_disponivel;
@@ -103,10 +104,30 @@ void *escrita()
 
 void *leitura()
 {
-    // escrita no arquivo de saída
-    if(buffer_s_disponivel){
-        //escreve no buffer
+    FILE *arq;
+    //abrir o arquivo de saida 
+    if((arq=fopen("s.txt", "wt"))=NULL){
+        printf("\n Erro: criando o arquivo de saída (s.txt)\n");
+        pthread_exit(NULL);
     }
+
+    while(G_terminou > 0){
+        pthread_mutex_look(& buffer_s_mutex)
+         // escrita no arquivo de saída
+        if(buffer_s_disponivel){
+            //escreve no buffer
+            fprintf(arq, "%s\n",buffer_s);
+
+            //marcar o buffer de saida como vazio 
+            buffer_s_disponivel = 1;
+
+            //decrementar o G_terminou apois processar uma entrada 
+            pthread_mutex_lock(&G_p_fi);
+            G_terminou--;
+            pthread_mutex_unlock(&G_p_fi);
+        }
+    }
+   
    return(NULL);
 }
 
