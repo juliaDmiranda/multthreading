@@ -94,11 +94,29 @@ int gerar_entrada()
 
 void *escrita()
 {
+        FILE *arq;
+
+    pthread_mutex_lock(&mutex_buffer_s);
+
     // escrita no buffer de entrada
-    if(buffer_e_disponivel){
+    if(!esta_vazio_buffer_s){
         //escreve no buffer
+        if ((arq = fopen("s.txt","wt"))==NULL)
+        {
+            printf("\nERRO: criando o arquivo de entrada (e.txt)\n");
+            return(ERRO);
+        }
+
+        fprintf(arq,"%s\n",buffer_s);
+
+        limpa_buffer(buffer_s);
+
+        esta_vazio_buffer_s = 1;
     }
 
+    pthread_mutex_unlock(&mutex_buffer_s);
+
+    msleep();
     return(NULL);
 }
 
