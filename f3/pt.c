@@ -186,35 +186,61 @@ void *leitura()
 }
 
 void *processamento(){
-    // bloqueia buffer de entrada
-    pthread_mutex_lock(&mutex_buffer_e);
+    char buffer_tmp[BUFFER_TAM];
 
-    if(esta_vazio_buffer_e){
-        pthread_mutex_unlock(&mutex_buffer_e);
+    int continua = 1;
+
+    while(continua){
+        // bloqueia buffer de entrada
+        pthread_mutex_lock(&buffer_e_mutex);
+
+        if(!buffer_e_esta_vazio){
+
+            limpa_buffer(buffer_tmp);
+
+            // lê do buffer de entrada um novo registro
+            strcpy(buffer_tmp, buffer_e);
+            
+            // limpa o buffer de entrada
+            limpa_buffer(buffer_e);
+
+            buffer_e_esta_vazio = 1;
+            
+            pthread_mutex_unlock(&buffer_e_mutex);
+
+
+            inverte_string(buffer_tmp);
+            
+
+            while(1){
+                pthread_mutex_lock(&buffer_s_mutex);
+                if(buffer_s_esta_vazio){
+                    strcpy(buffer_s, buffer_tmp);
+                    buffer_s_esta_vazio = 0;
+                     pthread_mutex_unlock(&buffer_s_mutex);
+
+                    break;
+                }
+                pthread_mutex_unlock(&buffer_s_mutex);
+            }
+            
+        }else{
+            pthread_mutex_unlock(&buffer_e_mutex);
+
+            pthread_mutex_lock(&terminou_mutex);
+            if(terminou == 2){
+                terminou --;
+                continua = 0;
+
+            }
+            pthread_mutex_unlock(&terminou_mutex);
+        }
+
+        msleep(); // onde por performance *?**
     }
-    else{
-        char buffer_tmp[BUFFER_TAM];
 
-        limpa_buffer(buffer_tmp);
 
-        // lê do buffer de entrada um novo registro
-        strcpy(buffer_tmp, buffer_e);
-        
-        // limpa o buffer de entrada
-        limpa_buffer(buffer_e);
-        
-        pthread_mutex_unlock(&mutex_buffer_e);
-
-        pthread_mutex_lock(&mutex_buffer_s);
-        
-        inverte_string(buffer_tmp, buffer_s);
-
-        esta_vazio_buffer_s = 0;
-
-        pthread_mutex_unlock(&mutex_buffer_s);
-    
-    }
-    msleep();
+    //for(;;);
 
     return(NULL);
 }
