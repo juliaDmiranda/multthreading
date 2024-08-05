@@ -223,18 +223,18 @@ void finalizar()
     int nao_acabou = 1;
     while (nao_acabou)
     {
-        m_usleep(50);
-        pthread_mutex_lock(&G_p_fi);
-        if (G_terminou == 0)
+        msleep();
+        pthread_mutex_lock(&terminou_mutex);
+        if (terminou == 0)
         {
             printf("\nEm finalizar... Acabou mesmo!");
             nao_acabou = 0;
         }
-        pthread_mutex_unlock(&G_p_fi);
+        pthread_mutex_unlock(&terminou_mutex);
     }
-    return;
+    //return;
 }
-*/
+
 
 void chama_threads(pthread_t *nome_pthread, void *(*funcao)(void *)) {
     if (pthread_create(nome_pthread, NULL, funcao, NULL)) {
