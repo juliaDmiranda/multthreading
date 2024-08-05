@@ -111,7 +111,6 @@ void *escrita()
         printf("\n Erro: criando o arquivo de saída (s.txt)\n");
         pthread_exit(NULL);
     }
-
     while(continua){
 
         pthread_mutex_lock(& buffer_s_mutex);
@@ -125,7 +124,6 @@ void *escrita()
             
             // limpa buffer
             limpa_buffer(buffer_s);
-
             //marcar o buffer de saida como vazio 
             buffer_s_esta_vazio = 1;
             pthread_mutex_unlock(& buffer_s_mutex);
@@ -260,6 +258,7 @@ void *processamento(){
 
     return(NULL);
 }
+
 void finalizar()
 {
     int nao_acabou = 1;
