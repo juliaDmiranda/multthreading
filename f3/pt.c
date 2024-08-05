@@ -252,27 +252,28 @@ int main(void)
     pthread_t saida_thread;
 
 
-    // inicializacao do G_terminou
-    G_terminou = 3;
+    // inicializacao do terminou
+    terminou = 3;
 
     // inicializacao dos mutexes de lock
-    init_lock(&mutex_buffer_e);
-    init_lock(&mutex_buffer_s);
-
+    init_lock(&buffer_e_mutex);
+    init_lock(&buffer_s_mutex);
+    init_lock(&terminou_mutex);
+    
     // limpeza dos buffers
     limpa_buffer(buffer_e);
     limpa_buffer(buffer_s);
 
     // inicializacao dos controladores dos buffers
-    int esta_vazio_buffer_e = 1;
-    int esta_vazio_buffer_s = 1;
+    buffer_e_esta_vazio = 1;
+    buffer_s_esta_vazio = 1;
 
     // geracao do arquivo de entrada
-    /*if (!gerar_entrada())
+    if (!gerar_entrada())
     {
         printf("\nVou sair");
         return(1);
-    }*/
+    }
 
     // chamada das pthreads
     chama_threads(&entrada_thread, escrita);
@@ -290,7 +291,8 @@ int main(void)
     pthread_join(saida_thread, NULL);
 
     // finaliza��o dos mutexes
-    fini_lock(&mutex_buffer_e);
-    fini_lock(&mutex_buffer_s);
+    fini_lock(&buffer_e_mutex);
+    fini_lock(&buffer_s_mutex);
+    fini_lock(&terminou_mutex);
     return(0);
 }
