@@ -35,7 +35,8 @@ int G_terminou;
 char buffer_e[6];
 char buffer_s[6];
 
-void msleep() {struct timespec start, end;
+void msleep() {
+    struct timespec start, end;
     unsigned long elapsed;
 
     clock_gettime(CLOCK_MONOTONIC, &start);  // Obtém o tempo inicial
@@ -43,7 +44,8 @@ void msleep() {struct timespec start, end;
     do {
         clock_gettime(CLOCK_MONOTONIC, &end);  // Obtém o tempo atual
         elapsed = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_nsec - start.tv_nsec) / 1000000;
-    } while (elapsed < TEMPO_SLEEP);  // Continua até o tempo decorrido ser o suficiente}
+    } while (elapsed < TEMPO_SLEEP);  // Continua até o tempo decorrido ser o suficiente
+}
 
 void init_lock(pthread_mutex_t *lock) // inicializa as vari�veis de lock, fazer isto antes do inicio das threads
 {
