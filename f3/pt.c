@@ -78,7 +78,7 @@ void inverte_string(char* str_src) {
 }
 
 
-int gerar_entrada()
+int gerar_entrada(int tam)
 {
     FILE *arq;
     int i;
@@ -88,7 +88,9 @@ int gerar_entrada()
         return(ERRO);
     }
 
-    for (i = 1 ; i <= GERA_TAM; ++i)
+    if (!tam) tam = GERA_TAM;
+
+    for (i = 1 ; i <= tam; ++i)
     {
         fprintf(arq,"%05d\n",i);
     }
@@ -286,9 +288,12 @@ void chama_threads(pthread_t *nome_pthread, void *(*funcao)(void *)) {
     }
 }
 
-
-int main(void)
+// ./pt <quantidade de registros>
+int main(int argc, char *argv[])
 {
+    int tam = atoi(argv[1]);
+    printf("Quantidade de registros: %d\n", tam);
+
     // declara��o das pthreads
     pthread_t entrada_thread;
     pthread_t processamento_thread;
@@ -312,7 +317,7 @@ int main(void)
     buffer_s_esta_vazio = 1;
 
     // geracao do arquivo de entrada
-    if (!gerar_entrada())
+    if (!gerar_entrada(tam))
     {
         printf("\nVou sair");
         return(1);
