@@ -58,7 +58,7 @@ void fini_lock(pthread_mutex_t *lock) // finalize as variaveis de lock, apos o p
 }
 
 void limpa_buffer(char* buffer){
-    memset(buffer, '\0', BUFFER_TAM);
+    memset(buffer, 0, BUFFER_TAM);
 }
 
 void inverte_string(char* str_src) {
