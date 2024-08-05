@@ -14,26 +14,27 @@ cc -o pt -lpthread pt.c
 #endif
 #define ERRO 0
 #define OK   1
-
-#define TEMPO_SLEEP 10
+#define TEMPO_SLEEP 1
+#define BUFFER_TAM 6
+#define GERA_TAM 10
 
 /// Variaveis globais
 
 // declaracao dos mutexes
 pthread_mutex_t buffer_e_mutex;
 pthread_mutex_t buffer_s_mutex;
-pthread_mutex_t G_p_fi;
+pthread_mutex_t terminou_mutex;
 
 // controladores dos buffers que indica se estão vazios
-int buffer_e_disponivel;
-int buffer_s_disponivel;
+int buffer_e_esta_vazio;
+int buffer_s_esta_vazio;
 
 // variavel de controle do encerramento
-int G_terminou;
+int terminou;
 
 // buffers de processamento
-char buffer_e[6];
-char buffer_s[6];
+char buffer_e[BUFFER_TAM];
+char buffer_s[BUFFER_TAM];
 
 void msleep() {
     struct timespec start, end;
