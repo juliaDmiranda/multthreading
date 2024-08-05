@@ -81,7 +81,7 @@ int gerar_entrada()
         return(ERRO);
     }
 
-    for (i = 1 ; i <= 1000; ++i)
+    for (i = 1 ; i <= GERA_TAM; ++i)
     {
         fprintf(arq,"%05d\n",i);
     }
