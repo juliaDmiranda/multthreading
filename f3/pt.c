@@ -61,13 +61,17 @@ void limpa_buffer(char* buffer){
     memset(buffer, '\0', BUFFER_TAM);
 }
 
-void inverte_string(const char* str_src, char* str_dest) {
+void inverte_string(char* str_src) {
+    char tmp[BUFFER_TAM];
     int buffer_tam = BUFFER_TAM - 1;
+
     for (int i = 0; i < buffer_tam; i++) {
-        str_dest[i] = str_src[buffer_tam - 1 - i];  // Copia os caracteres na ordem inversa
+        tmp[i] = str_src[buffer_tam - 1 - i];  // Copia os caracteres na ordem inversa
     }
 
-    str_dest[buffer_tam] = '\0';  // Adiciona o caractere nulo ao final da string invertida
+    tmp[buffer_tam] = '\0';  // Adiciona o caractere nulo ao final da string invertida
+
+    strcpy(str_src, tmp);
 }
 
 
