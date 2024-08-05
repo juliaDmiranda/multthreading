@@ -177,13 +177,10 @@ void *leitura()
     while(continua) {
         //bloqueia buffer de entrada
         pthread_mutex_lock(&buffer_e_mutex);
-
         if(buffer_e_esta_vazio){
             if(fgets(buffer_e, BUFFER_TAM, arq1) == NULL){
                 continua = 0;
                 terminou --;
-                printf("\nLeitura terminou: %d\n\n", terminou);
-            
                 pthread_mutex_unlock(&buffer_e_mutex);
                 break;
 
