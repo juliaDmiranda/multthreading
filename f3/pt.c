@@ -181,7 +181,6 @@ void *leitura()
                 continua = 0;
                 terminou --;
                 printf("\nLeitura terminou: %d\n\n", terminou);
-            }
             
                 pthread_mutex_unlock(&buffer_e_mutex);
                 break;
