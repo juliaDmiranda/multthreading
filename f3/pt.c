@@ -145,11 +145,11 @@ void *escrita()
 
 void *leitura()
 {
-    FILE *arq;
+    FILE *arq1;
     char* fim_de_arquivo;
     int continua = 1;
 
-    if ((arq = fopen("e.txt","rt"))==NULL)
+    if ((arq1 = fopen("e.txt","rt"))==NULL)
     {
         printf("\nERRO: criando o arquivo de entrada (e.txt)\n");
         return(ERRO);
@@ -160,28 +160,29 @@ void *leitura()
         pthread_mutex_lock(&buffer_e_mutex);
 
         if(buffer_e_esta_vazio){
-            printf("leitura: buffer e está vazio");
-
-            if(fgets(buffer_e, sizeof(6), arq) == NULL){
+            if(fgets(buffer_e, BUFFER_TAM, arq1) == NULL){
                 continua = 0;
                 terminou --;
                 printf("\nLeitura terminou: %d\n\n", terminou);
             }
             
-            pthread_mutex_unlock(&buffer_e_mutex);
+                pthread_mutex_unlock(&buffer_e_mutex);
+                break;
 
-            limpa_buffer(buffer_e);
-
+            }
+            
             //informa que o buffer_e está cheio
             buffer_e_esta_vazio = 0;
+            pthread_mutex_unlock(&buffer_e_mutex);
         }
         //desbloqueia mutex
         pthread_mutex_unlock(&buffer_e_mutex);
-        //espera
+        
         msleep();
-    } 
-    fclose(arq);
-    for(;;);
+    }
+    fclose(arq1);
+
+    //for(;;);
    return(NULL);   
 }
 
