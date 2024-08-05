@@ -96,6 +96,7 @@ void *escrita()
 {
     FILE *arq;
     int continua = 1;
+    
     //abrir o arquivo de saida 
     if((arq=fopen("s.txt", "wt"))==NULL){
         printf("\n Erro: criando o arquivo de saída (s.txt)\n");
@@ -103,17 +104,22 @@ void *escrita()
     }
 
     while(continua){
+
         pthread_mutex_lock(& buffer_s_mutex);
-         // escrita no arquivo de saída
-        if(buffer_s_esta_vazio){
+
+        // escrita no arquivo de saída
+        if(!buffer_s_esta_vazio){
             //escreve no buffer
             fprintf(arq, "%s\n",buffer_s);
+
+            fflush(arq);
             
             // limpa buffer
             limpa_buffer(buffer_s);
 
             //marcar o buffer de saida como vazio 
             buffer_s_esta_vazio = 1;
+            pthread_mutex_unlock(& buffer_s_mutex);
         }
         else{
             // condição de término: buffer s vazio
@@ -124,7 +130,12 @@ void *escrita()
             if(terminou == 1){
                 terminou--;
                 continua = 0;
-                printf("\nEscrita terminou: %d\n\n", terminou);
+
+                pthread_mutex_unlock(& buffer_s_mutex);
+
+                pthread_mutex_unlock(&terminou_mutex);
+
+                break;
 
             }
 
@@ -137,8 +148,7 @@ void *escrita()
 
     fclose(arq);
 
-
-    for(;;);
+    //for(;;);
     
     return(NULL);
 }
