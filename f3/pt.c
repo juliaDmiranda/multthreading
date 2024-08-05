@@ -129,30 +129,43 @@ void *escrita()
 void *leitura()
 {
     FILE *arq;
-    //abrir o arquivo de saida 
-    if((arq=fopen("s.txt", "wt"))=NULL){
-        printf("\n Erro: criando o arquivo de saída (s.txt)\n");
-        pthread_exit(NULL);
+    char* fim_de_arquivo;
+    int continua = 1;
+
+    if ((arq = fopen("e.txt","rt"))==NULL)
+    {
+        printf("\nERRO: criando o arquivo de entrada (e.txt)\n");
+        return(ERRO);
     }
 
-    while(G_terminou > 0){
-        pthread_mutex_look(& buffer_s_mutex)
-         // escrita no arquivo de saída
-        if(buffer_s_disponivel){
-            //escreve no buffer
-            fprintf(arq, "%s\n",buffer_s);
+    while(continua) {
+        //bloqueia buffer de entrada
+        pthread_mutex_lock(&buffer_e_mutex);
 
-            //marcar o buffer de saida como vazio 
-            buffer_s_disponivel = 1;
+        if(buffer_e_esta_vazio){
+            printf("leitura: buffer e está vazio");
 
-            //decrementar o G_terminou apois processar uma entrada 
-            pthread_mutex_lock(&G_p_fi);
-            G_terminou--;
-            pthread_mutex_unlock(&G_p_fi);
+            if(fgets(buffer_e, sizeof(6), arq) == NULL){
+                continua = 0;
+                terminou --;
+                printf("\nLeitura terminou: %d\n\n", terminou);
+            }
+            
+            pthread_mutex_unlock(&buffer_e_mutex);
+
+            limpa_buffer(buffer_e);
+
+            //informa que o buffer_e está cheio
+            buffer_e_esta_vazio = 0;
         }
-    }
-   
-   return(NULL);
+        //desbloqueia mutex
+        pthread_mutex_unlock(&buffer_e_mutex);
+        //espera
+        msleep();
+    } 
+    fclose(arq);
+    for(;;);
+   return(NULL);   
 }
 
 void *processamento(){
